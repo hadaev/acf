@@ -225,6 +225,7 @@ if ( ! class_exists( 'ACF' ) ) {
 			acf_include( 'includes/acf-field-group-functions.php' );
 			acf_include( 'includes/acf-form-functions.php' );
 			acf_include( 'includes/acf-meta-functions.php' );
+			acf_include( 'includes/acf-options-page-functions.php' );
 			acf_include( 'includes/acf-post-functions.php' );
 			acf_include( 'includes/acf-user-functions.php' );
 			acf_include( 'includes/acf-value-functions.php' );
@@ -283,6 +284,7 @@ if ( ! class_exists( 'ACF' ) ) {
 			// Include admin.
 			if ( is_admin() ) {
 				acf_include( 'includes/admin/admin.php' );
+				acf_include( 'includes/admin/admin-options-page.php' );
 				acf_include( 'includes/admin/admin-internal-post-type-list.php' );
 				acf_include( 'includes/admin/admin-internal-post-type.php' );
 				acf_include( 'includes/admin/admin-notices.php' );
@@ -429,6 +431,7 @@ if ( ! class_exists( 'ACF' ) ) {
 			acf_include( 'includes/locations/class-acf-location-widget.php' );
 			acf_include( 'includes/locations/class-acf-location-nav-menu.php' );
 			acf_include( 'includes/locations/class-acf-location-nav-menu-item.php' );
+			acf_include( 'includes/locations/class-acf-location-options-page.php' );
 
 			/**
 			 * Fires after location types have been included.
@@ -918,4 +921,3 @@ if ( ! class_exists( 'ACF' ) ) {
 	// Instantiate.
 	acf();
 } // class_exists check
-
