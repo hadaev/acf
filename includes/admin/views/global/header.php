@@ -33,14 +33,10 @@ if ( $page_title ) {
 	<?php
 	echo esc_html( $page_title );
 	?>
-	<?php if ( $acf_is_options_page_preview ) { ?>
-			<div class="acf-pro-label"><img src="<?php echo esc_url( acf_get_url( 'assets/images/pro-chip.svg' ) ); ?>" alt="<?php esc_attr_e( 'ACF PRO logo', 'acf' ); ?>"></div>
-		<?php
-	}
-	?>
+
 	</h1>
 	<?php if ( $acf_is_options_page_preview ) { ?>
-			<a href="#" class="acf-btn acf-btn-sm disabled">
+			<a href="#" id="acf-toggle-options-page-form" class="acf-btn acf-btn-sm" aria-expanded="false" aria-controls="acf-options-page-form">
 				<i class="acf-icon acf-icon-plus"></i>
 				<?php esc_html_e( 'Add Options Page', 'acf' ); ?>
 			</a>

@@ -292,6 +292,8 @@ if ( ! class_exists( 'ACF' ) ) {
 				acf_include( 'includes/admin/admin-upgrade.php' );
 			}
 
+			acf_include( 'includes/admin/admin-options-page-manager.php' );
+
 			// Include legacy.
 			acf_include( 'includes/legacy/legacy-locations.php' );
 
