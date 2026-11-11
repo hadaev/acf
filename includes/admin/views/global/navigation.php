@@ -222,11 +222,6 @@ function acf_print_menu_section( $menu_items, $section = '' ) {
 		</div>
 		<div class="acf-nav-upgrade-wrap">
 			<?php
-			if ( ! acf_is_pro() || ! acf_pro_is_license_active() ) {
-				$unlock_url    = acf_add_url_utm_tags( 'https://www.advancedcustomfields.com/pro/', 'ACF upgrade', 'header' );
-				$unlock_target = '_blank';
-				$unlock_text   = __( 'Unlock Extra Features with ACF PRO', 'acf' );
-
 				if ( acf_is_pro() ) {
 					if ( acf_pro_is_updates_page_visible() ) {
 						$unlock_url    = admin_url( 'edit.php?post_type=acf-field-group&page=acf-settings-updates#acf_pro_license' );
@@ -240,12 +235,8 @@ function acf_print_menu_section( $menu_items, $section = '' ) {
 					}
 				}
 				?>
-				<a target="<?php echo esc_attr( $unlock_target ); ?>" href="<?php echo esc_url( $unlock_url ); ?>" class="btn-upgrade acf-admin-toolbar-upgrade-btn">
-					<i class="acf-icon acf-icon-stars"></i>
-					<p><?php echo esc_html( $unlock_text ); ?></p>
-				</a>
+
 				<?php
-			}
 			?>
 			<a href="<?php echo $acf_wpengine_logo_link; ?>" target="_blank" class="acf-nav-wpengine-logo" aria-label="<?php esc_attr_e( 'WP Engine', 'acf' ); ?>"><?php //phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped on generation. ?>
 				<img src="<?php echo esc_url( acf_get_url( 'assets/images/wp-engine-horizontal-white.svg' ) ); ?>" alt="<?php esc_html_e( 'WP Engine logo', 'acf' ); ?>" />

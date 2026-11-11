@@ -5606,10 +5606,6 @@ msgstr "Гибкое поле содержимого"
 msgid "Repeater Field"
 msgstr "Повторяющееся поле"
 
-#: includes/admin/views/global/navigation.php:228
-msgid "Unlock Extra Features with ACF PRO"
-msgstr "Разблокируйте дополнительные возможности с помощью ACF PRO"
-
 #: includes/admin/views/acf-field-group/options.php:291
 msgid "Delete Field Group"
 msgstr "Удалить группу полей"

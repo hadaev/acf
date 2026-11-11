@@ -5388,10 +5388,6 @@ msgstr ""
 msgid "Repeater Field"
 msgstr "Повторюване поле"
 
-#: includes/admin/views/global/navigation.php:228
-msgid "Unlock Extra Features with ACF PRO"
-msgstr "Розблокуйте додаткові можливості з ACF PRO"
-
 #: includes/admin/views/acf-field-group/options.php:291
 msgid "Delete Field Group"
 msgstr "Видалити групу полів"

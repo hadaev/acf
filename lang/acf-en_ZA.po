@@ -4177,10 +4177,6 @@ msgstr ""
 msgid "Repeater Field"
 msgstr ""
 
-#: includes/admin/views/global/navigation.php:215
-msgid "Unlock Extra Features with ACF PRO"
-msgstr ""
-
 #: includes/admin/views/acf-field-group/options.php:267
 msgid "Delete Field Group"
 msgstr ""
