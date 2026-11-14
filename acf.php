@@ -300,16 +300,6 @@ if ( ! class_exists( 'ACF' ) ) {
 			// Include updater if included with this build.
 			acf_include( 'includes/Updater/init.php' );
 
-			// Include PRO if included with this build.
-//			if ( ! defined( 'ACF_PREVENT_PRO_LOAD' ) || ( defined( 'ACF_PREVENT_PRO_LOAD' ) && ! ACF_PREVENT_PRO_LOAD ) ) {
-//				acf_include( 'pro/acf-pro.php' );
-//			}
-//
-//			if ( is_admin() && function_exists( 'acf_is_pro' ) && ! acf_is_pro() ) {
-//				acf_include( 'includes/admin/admin-options-pages-preview.php' );
-//				acf_include( 'includes/admin/admin-email-opt-in-banner.php' );
-//			}
-
 			// Add actions.
 			add_action( 'init', array( $this, 'register_post_status' ), 4 );
 			add_action( 'init', array( $this, 'init' ), 5 );

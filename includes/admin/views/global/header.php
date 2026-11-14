@@ -35,7 +35,7 @@ if ( $page_title ) {
 	?>
 
 	</h1>
-	<?php if ( $acf_is_options_page_preview ) { ?>
+	<?php if ( $acf_is_options_page_preview && 'edit' !== acf_request_arg( 'acf_options_page_action' ) ) { ?>
 			<a href="#" id="acf-toggle-options-page-form" class="acf-btn acf-btn-sm" aria-expanded="false" aria-controls="acf-options-page-form">
 				<i class="acf-icon acf-icon-plus"></i>
 				<?php esc_html_e( 'Add Options Page', 'acf' ); ?>
