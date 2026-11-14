@@ -20,7 +20,6 @@ if ( ! class_exists( 'acf_field' ) ) :
 		public $doc_url       = false;
 		public $tutorial_url  = false;
 		public $preview_image = false;
-		public $pro           = false;
 		public $defaults      = array();
 		public $l10n          = array();
 		public $public        = true;
@@ -56,7 +55,6 @@ if ( ! class_exists( 'acf_field' ) ) :
 					'doc_url'       => $this->doc_url,
 					'tutorial_url'  => $this->tutorial_url,
 					'preview_image' => $this->preview_image,
-					'pro'           => $this->pro,
 					'public'        => $this->public,
 				)
 			);

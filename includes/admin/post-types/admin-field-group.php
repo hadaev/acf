@@ -98,7 +98,6 @@ if ( ! class_exists( 'acf_admin_field_group' ) ) :
 					'or'                                => esc_html__( 'or', 'acf' ),
 					'Show this field group if'          => esc_html__( 'Show this field group if', 'acf' ),
 					'Null'                              => esc_html__( 'Null', 'acf' ),
-					'PRO Only'                          => esc_html__( 'PRO Only', 'acf' ),
 
 					// Conditions.
 					'Has any value'                     => esc_html__( 'Has any value', 'acf' ),
@@ -152,8 +151,6 @@ if ( ! class_exists( 'acf_admin_field_group' ) ) :
 				array(
 					'fieldTypes'          => acf_get_field_types_info(),
 					'fieldCategoriesL10n' => acf_get_field_categories_i18n(),
-					'PROFieldTypes'       => array(),
-					'PROLocationTypes'    => array(),
 				)
 			);
 
@@ -235,23 +232,6 @@ if ( ! class_exists( 'acf_admin_field_group' ) ) :
 		 */
 		public function admin_footer() {
 			do_action( 'acf/field_group/admin_footer' );
-		}
-
-		/**
-		 * Renders HTML for the ACF PRO features upgrade notice.
-		 */
-		public function include_pro_features() {
-			// Bail if on PRO.
-			if ( acf_is_pro() && acf_pro_is_license_active() ) {
-				return;
-			}
-
-			// Bail if not the edit field group screen.
-			if ( ! acf_is_screen( 'acf-field-group' ) ) {
-				return;
-			}
-
-			acf_get_view( 'acf-field-group/pro-features' );
 		}
 
 		/**
@@ -403,15 +383,6 @@ if ( ! class_exists( 'acf_admin_field_group' ) ) :
 			);
 
 			acf_get_view( $this->post_type . '/fields', $view );
-		}
-
-		/**
-		 * This function will render the HTML for the metabox 'acf-field-group-pro-features'
-		 *
-		 * @since 6.0.0
-		 */
-		public function mb_pro_features() {
-			acf_get_view( $this->post_type . '/pro-features' );
 		}
 
 		/**

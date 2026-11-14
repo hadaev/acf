@@ -304,8 +304,6 @@ if ( ! class_exists( 'ACF' ) ) {
 			add_action( 'init', array( $this, 'register_post_status' ), 4 );
 			add_action( 'init', array( $this, 'init' ), 5 );
 			add_action( 'init', array( $this, 'register_post_types' ), 5 );
-			add_action( 'activated_plugin', array( $this, 'deactivate_other_instances' ) );
-			add_action( 'pre_current_active_plugins', array( $this, 'plugin_deactivated_notice' ) );
 
 			// Add filters.
 			add_filter( 'posts_where', array( $this, 'posts_where' ), 10, 2 );
@@ -584,65 +582,6 @@ if ( ! class_exists( 'ACF' ) ) {
 		}
 
 		/**
-		 * Checks if another version of ACF/ACF PRO is active and deactivates it.
-		 * Hooked on `activated_plugin` so other plugin is deactivated when current plugin is activated.
-		 *
-		 * @param string $plugin The plugin being activated.
-		 */
-		public function deactivate_other_instances( $plugin ) {
-			if ( ! in_array( $plugin, array( 'advanced-custom-fields/acf.php', 'advanced-custom-fields-pro/acf.php' ), true ) ) {
-				return;
-			}
-
-			$plugin_to_deactivate  = 'advanced-custom-fields/acf.php';
-			$deactivated_notice_id = '1';
-
-			// If we just activated the free version, deactivate the pro version.
-			if ( $plugin === $plugin_to_deactivate ) {
-				$plugin_to_deactivate  = 'advanced-custom-fields-pro/acf.php';
-				$deactivated_notice_id = '2';
-			}
-
-			if ( is_multisite() && is_network_admin() ) {
-				$active_plugins = (array) get_site_option( 'active_sitewide_plugins', array() );
-				$active_plugins = array_keys( $active_plugins );
-			} else {
-				$active_plugins = (array) get_option( 'active_plugins', array() );
-			}
-
-			foreach ( $active_plugins as $plugin_basename ) {
-				if ( $plugin_to_deactivate === $plugin_basename ) {
-					set_transient( 'acf_deactivated_notice_id', $deactivated_notice_id, 1 * HOUR_IN_SECONDS );
-					deactivate_plugins( $plugin_basename );
-					return;
-				}
-			}
-		}
-
-		/**
-		 * Displays a notice when either ACF or ACF PRO is automatically deactivated.
-		 */
-		public function plugin_deactivated_notice() {
-			$deactivated_notice_id = (int) get_transient( 'acf_deactivated_notice_id' );
-			if ( ! in_array( $deactivated_notice_id, array( 1, 2 ), true ) ) {
-				return;
-			}
-
-			$message = __( "Advanced Custom Fields and Advanced Custom Fields PRO should not be active at the same time. We've automatically deactivated Advanced Custom Fields.", 'acf' );
-			if ( 2 === $deactivated_notice_id ) {
-				$message = __( "Advanced Custom Fields and Advanced Custom Fields PRO should not be active at the same time. We've automatically deactivated Advanced Custom Fields PRO.", 'acf' );
-			}
-
-			?>
-			<div class="updated" style="border-left: 4px solid #ffba00;">
-				<p><?php echo esc_html( $message ); ?></p>
-			</div>
-			<?php
-
-			delete_transient( 'acf_deactivated_notice_id' );
-		}
-
-		/**
 		 * Filters the $where clause allowing for custom WP_Query args.
 		 *
 		 * @date    31/8/19
@@ -851,41 +790,16 @@ if ( ! class_exists( 'ACF' ) ) {
 				}
 			}
 
-			if ( acf_is_pro() ) {
-				do_action( 'acf/activated_pro' );
-			}
 		}
 	}
 
 	/**
-	 * An ACF specific getter to replace `home_url` in our license checks to ensure we can avoid third party filters.
+	 * Returns the site home URL.
 	 *
-	 * @since 6.0.1
-	 * @since 6.2.8 - Renamed to acf_pro_get_home_url to match pro exclusive function naming.
-	 * @since 6.3.10 - Renamed to acf_get_home_url now updater logic applies to free.
-	 *
-	 * @return string $home_url The output from home_url, sans known third party filters which cause license activation issues.
+	 * @return string The site home URL.
 	 */
 	function acf_get_home_url() {
-		if ( acf_is_pro() ) {
-			// Disable WPML and TranslatePress's home url overrides for our license check.
-			add_filter( 'wpml_get_home_url', 'acf_pro_license_ml_intercept', 99, 2 );
-			add_filter( 'trp_home_url', 'acf_pro_license_ml_intercept', 99, 2 );
-
-			if ( acf_pro_is_legacy_multisite() && acf_is_multisite_sub_site() ) {
-				$home_url = get_home_url( get_main_site_id() );
-			} else {
-				$home_url = home_url();
-			}
-
-			// Re-enable WPML and TranslatePress's home url overrides.
-			remove_filter( 'wpml_get_home_url', 'acf_pro_license_ml_intercept', 99 );
-			remove_filter( 'trp_home_url', 'acf_pro_license_ml_intercept', 99 );
-		} else {
-			$home_url = home_url();
-		}
-
-		return $home_url;
+		return home_url();
 	}
 
 	/**

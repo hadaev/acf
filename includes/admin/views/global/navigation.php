@@ -83,7 +83,7 @@ if ( $core_tabs === false ) {
 $acf_wpengine_logo_link = acf_add_url_utm_tags(
 	'https://wpengine.com/',
 	'bx_prod_referral',
-	acf_is_pro() ? 'acf_pro_plugin_topbar_logo' : 'acf_free_plugin_topbar_logo',
+	'acf_plugin_topbar_logo',
 	false,
 	'acf_plugin',
 	'referral'
@@ -144,15 +144,9 @@ function acf_print_menu_section( $menu_items, $section = '' ) {
 <div class="acf-admin-toolbar">
 	<div class="acf-admin-toolbar-inner">
 		<div class="acf-nav-wrap">
-			<?php if ( acf_is_pro() && acf_pro_is_license_active() ) { ?>
-				<a href="<?php echo esc_url( admin_url( 'edit.php?post_type=acf-field-group' ) ); ?>" class="acf-logo pro" aria-label="<?php esc_attr_e( 'Edit ACF Field Groups', 'acf' ); ?>">
-					<img src="<?php echo esc_url( acf_get_url( 'assets/images/acf-pro-logo.svg' ) ); ?>" alt="<?php esc_attr_e( 'Advanced Custom Fields logo', 'acf' ); ?>">
-				</a>
-			<?php } else { ?>
-				<a href="<?php echo esc_url( admin_url( 'edit.php?post_type=acf-field-group' ) ); ?>" class="acf-logo" aria-label="<?php esc_attr_e( 'Edit ACF Field Groups', 'acf' ); ?>">
-					<img src="<?php echo esc_url( acf_get_url( 'assets/images/acf-logo.svg' ) ); ?>" alt="<?php esc_attr_e( 'Advanced Custom Fields logo', 'acf' ); ?>">
-				</a>
-			<?php } ?>
+			<a href="<?php echo esc_url( admin_url( 'edit.php?post_type=acf-field-group' ) ); ?>" class="acf-logo" aria-label="<?php esc_attr_e( 'Edit ACF Field Groups', 'acf' ); ?>">
+				<img src="<?php echo esc_url( acf_get_url( 'assets/images/acf-logo.svg' ) ); ?>" alt="<?php esc_attr_e( 'Advanced Custom Fields logo', 'acf' ); ?>">
+			</a>
 
 			<h2><?php echo esc_html( acf_get_setting( 'name' ) ); ?></h2>
 			<?php acf_print_menu_section( $core_tabs, 'core' ); ?>
@@ -170,7 +164,7 @@ if ( ! in_array( $screen->id, acf_get_internal_post_types(), true ) ) {
 		$acf_page_title = __( 'Tools', 'acf' );
 	} elseif ( $plugin_page == 'acf-settings-updates' ) {
 		$acf_page_title = __( 'Updates', 'acf' );
-	} elseif ( $plugin_page == 'acf_options_preview' && ! acf_is_pro() ) {
+	} elseif ( $plugin_page == 'acf_options_preview' ) {
 		$acf_page_title = __( 'Options Pages', 'acf' );
 	}
 	acf_get_view( 'global/header' );

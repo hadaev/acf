@@ -9,24 +9,20 @@
  * https://www.gnu.org/licenses/gpl-2.0.html
  */
 
-// calculate add-ons (non pro only)
+// Calculate available add-ons.
 $plugins = array();
 
-if ( ! acf_get_setting( 'pro' ) ) {
-	if ( is_plugin_active( 'acf-repeater/acf-repeater.php' ) ) {
-		$plugins[] = __( 'Repeater', 'acf' );
-	}
-	if ( is_plugin_active( 'acf-flexible-content/acf-flexible-content.php' ) ) {
-		$plugins[] = __( 'Flexible Content', 'acf' );
-	}
-	if ( is_plugin_active( 'acf-gallery/acf-gallery.php' ) ) {
-		$plugins[] = __( 'Gallery', 'acf' );
-	}
-	if ( is_plugin_active( 'acf-options-page/acf-options-page.php' ) ) {
-		$plugins[] = __( 'Options Page', 'acf' );
-	}
+if ( is_plugin_active( 'acf-repeater/acf-repeater.php' ) ) {
+	$plugins[] = __( 'Repeater', 'acf' );
+}
+if ( is_plugin_active( 'acf-flexible-content/acf-flexible-content.php' ) ) {
+	$plugins[] = __( 'Flexible Content', 'acf' );
+}
+if ( is_plugin_active( 'acf-gallery/acf-gallery.php' ) ) {
+	$plugins[] = __( 'Gallery', 'acf' );
+}
+if ( is_plugin_active( 'acf-options-page/acf-options-page.php' ) ) {
+	$plugins[] = __( 'Options Page', 'acf' );
 }
 
 ?>
-
-

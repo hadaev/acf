@@ -36,21 +36,6 @@ if ( isset( $field['endpoint'] ) && $field['endpoint'] ) {
 $field_label          = acf_get_field_label( $field, 'admin' );
 $field_type_label     = acf_get_field_type_label( $field['type'] );
 $field_type_supports  = acf_get_field_type_prop( $field['type'], 'supports' );
-$inactive_field_class = '';
-$inactive_field_title = '';
-
-if ( acf_is_pro() && acf_get_field_type_prop( $field['type'], 'pro' ) ) {
-	$div_attrs['class'] .= ' acf-pro-field-object';
-}
-
-if ( acf_is_pro() && acf_get_field_type_prop( $field['type'], 'pro' ) && ! acf_pro_is_license_active() ) {
-	$field_type_label .= '<span class="acf-pro-label-field-type"><img src="' . esc_url( acf_get_url( 'assets/images/pro-chip.svg' ) ) . '" alt="' . esc_attr__( 'ACF PRO Logo', 'acf' ) . '"></span>';
-
-	if ( ! acf_pro_is_license_expired() ) {
-		$inactive_field_class = ' acf-js-tooltip';
-		$inactive_field_title = __( 'PRO fields cannot be edited without an active license.', 'acf' );
-	}
-}
 
 if ( ! isset( $num_field_groups ) ) {
 	$num_field_groups = 0;
@@ -92,7 +77,7 @@ if ( isset( $field['conditional_logic'] ) && is_array( $field['conditional_logic
 				<span class="acf-icon acf-sortable-handle" title="<?php esc_attr_e( 'Drag to reorder', 'acf' ); ?>"><?php echo intval( $i + 1 ); ?></span>
 			</li>
 			<li class="li-field-label">
-				<strong class="<?php echo esc_attr( $inactive_field_class ); ?>" title="<?php echo esc_attr( $inactive_field_title ); ?>">
+				<strong>
 					<a class="edit-field" title="<?php esc_attr_e( 'Edit field', 'acf' ); ?>" href="#"><?php echo acf_esc_html( $field_label ); ?></a>
 				</strong>
 				<div class="row-options">

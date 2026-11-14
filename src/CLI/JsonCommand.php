@@ -366,7 +366,7 @@ class JsonCommand {
 	 * Reads an ACF export JSON file and imports the items into the database,
 	 * replicating the functionality of the import UI in the WordPress admin.
 	 * If an item with the same key already exists, it will be updated.
-	 * Options pages require ACF PRO.
+	 * Options pages are imported when present in the JSON file.
 	 *
 	 * ## OPTIONS
 	 *
@@ -497,7 +497,7 @@ class JsonCommand {
 	 * : Export specific taxonomies by key or label, comma separated.
 	 *
 	 * [--options-pages=<keys>]
-	 * : Export specific options pages by key or label, comma separated. Requires ACF PRO.
+	 * : Export specific options pages by key or label, comma separated.
 	 *
 	 * [--dir=<directory>]
 	 * : Directory path to write the JSON file to.
@@ -644,16 +644,6 @@ class JsonCommand {
 		}
 
 		if ( $options_pages_arg ) {
-			if ( ! acf_is_pro() ) {
-				WP_CLI::error(
-					"Options pages require ACF PRO.\n\n" .
-					"To export options pages, you need:\n" .
-					"  - ACF PRO license\n" .
-					"  - Active license key\n\n" .
-					'See: https://www.advancedcustomfields.com/pro/'
-				);
-			}
-
 			$keys = array_merge( $keys, $this->resolve_keys_for_type( 'acf-ui-options-page', $options_pages_arg ) );
 		}
 
@@ -717,7 +707,7 @@ class JsonCommand {
 						"  - field-group\n" .
 						"  - post-type\n" .
 						"  - taxonomy\n" .
-						"  - options-page (ACF PRO only)\n\n" .
+						"  - options-page\n\n" .
 						'See: wp help acf json',
 						$type_filter
 					)
@@ -726,32 +716,10 @@ class JsonCommand {
 
 			$post_type = self::TYPE_MAP[ $type_filter ];
 
-			if ( 'acf-ui-options-page' === $post_type && ! acf_is_pro() ) {
-				WP_CLI::error(
-					"Options pages require ACF PRO.\n\n" .
-					"To sync options pages, you need:\n" .
-					"  - ACF PRO license\n" .
-					"  - Active license key\n\n" .
-					'See: https://www.advancedcustomfields.com/pro/'
-				);
-			}
-
 			return array( $post_type );
 		}
 
-		$post_types = acf_get_internal_post_types();
-
-		// Remove options pages from non-PRO installs.
-		if ( ! acf_is_pro() ) {
-			$post_types = array_filter(
-				$post_types,
-				function ( $pt ) {
-					return 'acf-ui-options-page' !== $pt;
-				}
-			);
-		}
-
-		return array_values( $post_types );
+		return array_values( acf_get_internal_post_types() );
 	}
 
 	/**

@@ -9,9 +9,6 @@
  * https://www.gnu.org/licenses/gpl-2.0.html
  */
 
-$acf_learn_more_link = acf_add_url_utm_tags( 'https://www.advancedcustomfields.com/pro/', 'ACF upgrade', 'no-options-pages' );
-$acf_upgrade_button  = acf_add_url_utm_tags( 'https://www.advancedcustomfields.com/pro/', 'ACF upgrade', 'no-options-pages-pricing', 'pricing-table' );
-
 $acf_options_pages_desc = sprintf(
 	/* translators: %s URL to ACF options pages documentation */
 	__( 'ACF <a href="%s" target="_blank">options pages</a> are custom admin pages for managing global settings via fields. You can create multiple pages and sub-pages.', 'acf' ),
@@ -31,14 +28,10 @@ $acf_getting_started = sprintf(
 			<tr class="no-items">
 				<td class="colspanchange" colspan="6">
 					<div class="acf-no-field-groups-wrapper">
-						<div class="acf-no-field-groups-inner acf-field-group-pro-features-content">
+						<div class="acf-no-field-groups-inner">
 							<img src="<?php echo esc_url( acf_get_url( 'assets/images/empty-post-types.svg' ) ); ?>" />
-								<h2><?php echo acf_esc_html( __( 'Upgrade to ACF PRO to create options pages in just a few clicks', 'acf' ) ); ?></h2>
+								<h2><?php esc_html_e( 'No options pages found', 'acf' ); ?></h2>
 								<p><?php echo acf_esc_html( $acf_options_pages_desc ); ?></p>
-								<div class="acf-ui-options-page-pro-features-actions">
-									<a target="_blank" href="<?php echo $acf_learn_more_link; ?>" class="acf-btn acf-btn-muted"><?php esc_html_e( 'Learn More', 'acf' ); ?> <i class="acf-icon acf-icon-arrow-up-right"></i></a><?php //phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped on generation. ?>
-									<a target="_blank" href="<?php echo $acf_upgrade_button; ?>" class="acf-btn acf-options-pages-preview-upgrade-button"> <?php esc_html_e( 'Upgrade to ACF PRO', 'acf' ); ?> <i class="acf-icon acf-icon-arrow-up-right"></i></a><?php //phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped on generation. ?>
-								</div>
 								<p class="acf-small"><?php echo acf_esc_html( $acf_getting_started ); ?></p>
 						</div>
 					</div>

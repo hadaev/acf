@@ -50,7 +50,6 @@ class GEO {
 
 		// JSON-LD Outputs.
 		new Outputs\Posts();
-		// Note: Blocks output is initialized separately in PRO (see acf-pro.php).
 	}
 
 	/**

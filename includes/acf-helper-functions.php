@@ -519,7 +519,7 @@ function acf_add_url_utm_tags( $url, $campaign, $content, $anchor = false, $sour
 	$medium     = ! empty( $medium ) ? $medium : 'insideplugin';
 
 	if ( empty( $source ) ) {
-		$source = acf_is_pro() ? 'ACF PRO' : 'ACF Free';
+		$source = 'ACF Free';
 	}
 
 	$query = http_build_query(
@@ -664,17 +664,6 @@ function acf_maybe_unserialize( $data ) {
 	}
 
 	return $data;
-}
-
-/**
- * Check if current install is ACF PRO
- *
- * @since 6.2
- *
- * @return boolean True if the current install is ACF PRO
- */
-function acf_is_pro() {
-	return defined( 'ACF_PRO' ) && ACF_PRO;
 }
 
 /**

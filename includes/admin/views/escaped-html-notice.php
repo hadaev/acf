@@ -9,7 +9,7 @@
  * https://www.gnu.org/licenses/gpl-2.0.html
  */
 
-$acf_plugin_name      = acf_is_pro() ? 'ACF PRO' : 'ACF';
+$acf_plugin_name      = 'ACF';
 $acf_plugin_name      = '<strong>' . $acf_plugin_name . ' &mdash;</strong>';
 $acf_learn_how_to_fix = '<a href="' . acf_add_url_utm_tags( 'https://www.advancedcustomfields.com/escaping-the-field/', 'docs', '6-2-5-security-changes' ) . '" target="_blank">' . __( 'Learn&nbsp;more', 'acf' ) . '</a>';
 $acf_class            = 'notice-error';

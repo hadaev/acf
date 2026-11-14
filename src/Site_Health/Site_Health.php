@@ -56,7 +56,6 @@ class Site_Health {
 
 		// ACF events.
 		add_action( 'acf/first_activated', array( $this, 'add_activation_event' ) );
-		add_action( 'acf/activated_pro', array( $this, 'add_activation_event' ) );
 		add_filter( 'acf/pre_update_field_group', array( $this, 'pre_update_acf_internal_cpt' ) );
 		add_filter( 'acf/pre_update_post_type', array( $this, 'pre_update_acf_internal_cpt' ) );
 		add_filter( 'acf/pre_update_taxonomy', array( $this, 'pre_update_acf_internal_cpt' ) );
@@ -130,8 +129,6 @@ class Site_Health {
 			}
 		}
 
-		$this->maybe_log_first_registered_block( $site_health, $updated );
-
 		$updated['last_updated'] = time();
 
 		return $this->update_site_health( $updated );
@@ -203,86 +200,14 @@ class Site_Health {
 	}
 
 	/**
-	 * Logs activation events for free/pro.
+	 * Logs the first activation event.
 	 *
 	 * @since 6.3
 	 *
 	 * @return boolean
 	 */
 	public function add_activation_event() {
-		$event_name = 'first_activated';
-
-		if ( acf_is_pro() ) {
-			$event_name = 'first_activated_pro';
-
-			if ( 'acf/first_activated' !== current_filter() ) {
-				$site_health = $this->get_site_health();
-
-				/**
-				 * We already have an event for when pro was first activated,
-				 * so we don't need to log an additional event here.
-				 */
-				if ( ! empty( $site_health[ 'event_' . $event_name ] ) ) {
-					return false;
-				}
-
-				$event_name = 'activated_pro';
-			}
-		}
-
-		return $this->add_site_health_event( $event_name );
-	}
-
-	/**
-	 * Logs when a site first registers an ACF Block.
-	 *
-	 * Only sets the event when the stored registered_acf_blocks count
-	 * transitions from 0 to a positive number. Requires a previously
-	 * stored count of 0 to avoid backfilling existing users. Tracks a
-	 * has_had_blocks flag to prevent false positives when users remove
-	 * all blocks and later re-add them.
-	 *
-	 * @since 6.8
-	 *
-	 * @param array $site_health The previously stored site health data.
-	 * @param array $updated     The updated site health data. This array may be modified to include the first registered block event timestamp.
-	 * @return void
-	 */
-	public function maybe_log_first_registered_block( array $site_health, array &$updated ): void {
-		if ( ! acf_is_pro() || ! function_exists( 'acf_pro_get_registered_block_count' ) ) {
-			return;
-		}
-
-		if ( ! empty( $site_health['has_had_blocks'] ) ) {
-			$updated['has_had_blocks'] = true;
-		}
-
-		// Already tracked — event is immutable.
-		if ( ! empty( $updated['event_first_registered_block'] ) ) {
-			return;
-		}
-
-		// No previous block count stored — site predates this field. Skip to establish a baseline.
-		if ( ! isset( $site_health['registered_acf_blocks'] ) ) {
-			return;
-		}
-
-		// Blocks were previously registered — set flag and skip.
-		if ( (int) $site_health['registered_acf_blocks'] > 0 ) {
-			$updated['has_had_blocks'] = true;
-			return;
-		}
-
-		// Flag already set — user had blocks before (remove-then-re-add scenario).
-		if ( ! empty( $updated['has_had_blocks'] ) ) {
-			return;
-		}
-
-		// Transition from 0 → positive: first time registering a block.
-		if ( acf_pro_get_registered_block_count() > 0 ) {
-			$updated['event_first_registered_block'] = time();
-			$updated['has_had_blocks']               = true;
-		}
+		return $this->add_site_health_event( 'first_activated' );
 	}
 
 	/**
@@ -384,9 +309,6 @@ class Site_Health {
 		global $wpdb;
 
 		$fields         = array();
-		$is_pro         = acf_is_pro();
-		$license        = $is_pro ? acf_pro_get_license() : array();
-		$license_status = $is_pro ? acf_pro_get_license_status() : array();
 		$field_groups   = acf_get_field_groups();
 		$post_types     = acf_get_acf_post_types();
 		$taxonomies     = acf_get_acf_taxonomies();
@@ -403,46 +325,14 @@ class Site_Health {
 
 		$fields['plugin_type'] = array(
 			'label' => __( 'Plugin Type', 'acf' ),
-			'value' => $is_pro ? __( 'PRO', 'acf' ) : __( 'Free', 'acf' ),
-			'debug' => $is_pro ? 'PRO' : 'Free',
+			'value' => __( 'Free', 'acf' ),
+			'debug' => 'Free',
 		);
 
 		$fields['update_source'] = array(
 			'label' => __( 'Update Source', 'acf' ),
 			'value' => apply_filters( 'acf/site_health/update_source', __( 'wordpress.org', 'acf' ) ),
 		);
-
-		if ( $is_pro ) {
-			$fields['activated'] = array(
-				'label' => __( 'License Activated', 'acf' ),
-				'value' => ! empty( $license ) ? $yes : $no,
-				'debug' => ! empty( $license ),
-			);
-
-			$fields['activated_url'] = array(
-				'label' => __( 'Licensed URL', 'acf' ),
-				'value' => ! empty( $license['url'] ) ? $license['url'] : '',
-			);
-
-			$fields['license_type'] = array(
-				'label' => __( 'License Type', 'acf' ),
-				'value' => $license_status['name'],
-			);
-
-			$fields['license_status'] = array(
-				'label' => __( 'License Status', 'acf' ),
-				'value' => $license_status['status'],
-			);
-
-			$expiry = ! empty( $license_status['expiry'] ) ? $license_status['expiry'] : '';
-			$format = get_option( 'date_format', 'F j, Y' );
-
-			$fields['subscription_expires'] = array(
-				'label' => __( 'Subscription Expiry Date', 'acf' ),
-				'value' => is_numeric( $expiry ) ? date_i18n( $format, $expiry ) : '',
-				'debug' => $expiry,
-			);
-		}
 
 		$fields['wp_version'] = array(
 			'label' => __( 'WordPress Version', 'acf' ),
@@ -568,7 +458,6 @@ class Site_Health {
 		}
 
 		$all_fields                 = array();
-		$object_types               = array();
 		$all_rules                  = array();
 		$field_groups_per_post_type = array();
 
@@ -591,17 +480,6 @@ class Site_Health {
 						$field_groups_per_post_type[ $rule['value'] ][ $field_group['key'] ] = true;
 					}
 
-					if ( ! $is_pro ) {
-						continue;
-					}
-
-					$location = acf_get_location_type( $rule['param'] );
-					if ( ! $location ) {
-						continue;
-					}
-
-					$location_type                         = $location->get_object_type( $rule );
-					$object_types[ $field_group['key'] ][] = $location_type;
 				}
 			}
 		}
@@ -623,48 +501,6 @@ class Site_Health {
 			'label' => __( 'Field Groups by Post Type', 'acf' ),
 			'value' => $by_post_type,
 		);
-
-		if ( $is_pro ) {
-			$field_groups_with_single_block_rule      = 0;
-			$field_groups_with_multiple_block_rules   = 0;
-			$field_groups_with_blocks_and_other_rules = 0;
-
-			foreach ( $object_types as $types ) {
-				$num_types = array_count_values( $types );
-
-				// Bail if no block location rules.
-				if ( empty( $num_types['block'] ) ) {
-					continue;
-				}
-
-				if ( count( $num_types ) === 1 ) {
-					// Field group is only assigned to blocks.
-					if ( $num_types['block'] === 1 ) {
-						++$field_groups_with_single_block_rule;
-					} else {
-						++$field_groups_with_multiple_block_rules;
-					}
-				} else {
-					// Field group is assigned to blocks & other stuff.
-					++$field_groups_with_blocks_and_other_rules;
-				}
-			}
-
-			$fields['field_groups_with_single_block_rule'] = array(
-				'label' => __( 'Number of Field Groups with a Single Block Location', 'acf' ),
-				'value' => number_format_i18n( $field_groups_with_single_block_rule ),
-			);
-
-			$fields['field_groups_with_multiple_block_rules'] = array(
-				'label' => __( 'Number of Field Groups with Multiple Block Locations', 'acf' ),
-				'value' => number_format_i18n( $field_groups_with_multiple_block_rules ),
-			);
-
-			$fields['field_groups_with_blocks_and_other_rules'] = array(
-				'label' => __( 'Number of Field Groups with Blocks and Other Locations', 'acf' ),
-				'value' => number_format_i18n( $field_groups_with_blocks_and_other_rules ),
-			);
-		}
 
 		$fields_by_type             = array();
 		$third_party_fields_by_type = array();
@@ -754,63 +590,61 @@ class Site_Health {
 			'value' => number_format_i18n( count( $json_taxonomies ) ),
 		);
 
-		if ( $is_pro ) {
-			$enable_options_pages_ui = acf_get_setting( 'enable_options_pages_ui' );
+		$enable_options_pages_ui = acf_get_setting( 'enable_options_pages_ui' );
 
-			$fields['ui_options_pages_enabled'] = array(
-				'label' => __( 'Options Pages UI Enabled', 'acf' ),
-				'value' => $enable_options_pages_ui ? $yes : $no,
-				'debug' => $enable_options_pages_ui,
-			);
+		$fields['ui_options_pages_enabled'] = array(
+			'label' => __( 'Options Pages UI Enabled', 'acf' ),
+			'value' => $enable_options_pages_ui ? $yes : $no,
+			'debug' => $enable_options_pages_ui,
+		);
 
-			$options_pages    = acf_get_options_pages();
-			$ui_options_pages = array();
+		$options_pages    = acf_get_options_pages();
+		$ui_options_pages = array();
 
-			if ( empty( $options_pages ) || ! is_array( $options_pages ) ) {
-				$options_pages = array();
-			}
+		if ( empty( $options_pages ) || ! is_array( $options_pages ) ) {
+			$options_pages = array();
+		}
 
-			if ( $enable_options_pages_ui ) {
-				$ui_options_pages = acf_get_ui_options_pages();
+		if ( $enable_options_pages_ui ) {
+			$ui_options_pages = acf_get_ui_options_pages();
 
-				$ui_options_pages_in_ui = array_filter(
-					$ui_options_pages,
-					function ( $ui_options_page ) {
-						return ! empty( $ui_options_page['ID'] );
-					}
-				);
-
-				$json_options_pages = array_filter(
-					$ui_options_pages,
-					function ( $ui_options_page ) {
-						return ! empty( $ui_options_page['local'] ) && empty( $ui_options_page['ID'] );
-					}
-				);
-
-				$fields['ui_options_pages'] = array(
-					'label' => __( 'Registered Options Pages (UI)', 'acf' ),
-					'value' => number_format_i18n( count( $ui_options_pages_in_ui ) ),
-				);
-
-				$fields['json_options_pages'] = array(
-					'label' => __( 'Registered Options Pages (JSON)', 'acf' ),
-					'value' => number_format_i18n( count( $json_options_pages ) ),
-				);
-			}
-
-			$ui_options_page_slugs = array_column( $ui_options_pages, 'menu_slug' );
-			$php_options_pages     = array_filter(
-				$options_pages,
-				function ( $options_page ) use ( $ui_options_page_slugs ) {
-					return ! in_array( $options_page['menu_slug'], $ui_options_page_slugs, true );
+			$ui_options_pages_in_ui = array_filter(
+				$ui_options_pages,
+				function ( $ui_options_page ) {
+					return ! empty( $ui_options_page['ID'] );
 				}
 			);
 
-			$fields['php_options_pages'] = array(
-				'label' => __( 'Registered Options Pages (PHP)', 'acf' ),
-				'value' => number_format_i18n( count( $php_options_pages ) ),
+			$json_options_pages = array_filter(
+				$ui_options_pages,
+				function ( $ui_options_page ) {
+					return ! empty( $ui_options_page['local'] ) && empty( $ui_options_page['ID'] );
+				}
+			);
+
+			$fields['ui_options_pages'] = array(
+				'label' => __( 'Registered Options Pages (UI)', 'acf' ),
+				'value' => number_format_i18n( count( $ui_options_pages_in_ui ) ),
+			);
+
+			$fields['json_options_pages'] = array(
+				'label' => __( 'Registered Options Pages (JSON)', 'acf' ),
+				'value' => number_format_i18n( count( $json_options_pages ) ),
 			);
 		}
+
+		$ui_options_page_slugs = array_column( $ui_options_pages, 'menu_slug' );
+		$php_options_pages     = array_filter(
+			$options_pages,
+			function ( $options_page ) use ( $ui_options_page_slugs ) {
+				return ! in_array( $options_page['menu_slug'], $ui_options_page_slugs, true );
+			}
+		);
+
+		$fields['php_options_pages'] = array(
+			'label' => __( 'Registered Options Pages (PHP)', 'acf' ),
+			'value' => number_format_i18n( count( $php_options_pages ) ),
+		);
 
 		$rest_api_format = acf_get_setting( 'rest_api_format' );
 
@@ -820,76 +654,7 @@ class Site_Health {
 			'debug' => $rest_api_format,
 		);
 
-		$schema_objects = array(
-			'blocks'     => 0,
-			'post_types' => 0,
-		);
-
-		if ( $is_pro ) {
-			$fields['registered_acf_blocks'] = array(
-				'label' => __( 'Registered ACF Blocks', 'acf' ),
-				'value' => number_format_i18n( acf_pro_get_registered_block_count() ),
-			);
-
-			$blocks                           = acf_get_block_types();
-			$block_api_versions               = array();
-			$acf_block_versions               = array();
-			$blocks_using_post_meta           = 0;
-			$blocks_using_auto_inline_editing = 0;
-
-			foreach ( $blocks as $block ) {
-				if ( ! isset( $block_api_versions[ 'v' . $block['api_version'] ] ) ) {
-					$block_api_versions[ 'v' . $block['api_version'] ] = 0;
-				}
-
-				if ( ! isset( $acf_block_versions[ 'v' . $block['acf_block_version'] ] ) ) {
-					$acf_block_versions[ 'v' . $block['acf_block_version'] ] = 0;
-				}
-
-				if ( ! empty( $block['use_post_meta'] ) ) {
-					++$blocks_using_post_meta;
-				}
-
-				if ( ! empty( $block['auto_inline_editing'] ) ) {
-					++$blocks_using_auto_inline_editing;
-				}
-
-				if ( ! empty( $block['auto_jsonld'] ) ) {
-					++$schema_objects['blocks'];
-				}
-
-				++$block_api_versions[ 'v' . $block['api_version'] ];
-				++$acf_block_versions[ 'v' . $block['acf_block_version'] ];
-			}
-
-			$fields['blocks_per_api_version'] = array(
-				'label' => __( 'Blocks Per API Version', 'acf' ),
-				'value' => $block_api_versions,
-			);
-
-			$fields['blocks_per_acf_block_version'] = array(
-				'label' => __( 'Blocks Per ACF Block Version', 'acf' ),
-				'value' => $acf_block_versions,
-			);
-
-			$fields['blocks_using_post_meta'] = array(
-				'label' => __( 'Blocks Using Post Meta', 'acf' ),
-				'value' => number_format_i18n( $blocks_using_post_meta ),
-			);
-
-			$fields['blocks_using_auto_inline_editing'] = array(
-				'label' => __( 'Blocks Using Auto Inline Editing', 'acf' ),
-				'value' => number_format_i18n( $blocks_using_auto_inline_editing ),
-			);
-
-			$preload_blocks = acf_get_setting( 'preload_blocks' );
-
-			$fields['preload_blocks'] = array(
-				'label' => __( 'Block Preloading Enabled', 'acf' ),
-				'value' => ! empty( $preload_blocks ) ? $yes : $no,
-				'debug' => $preload_blocks,
-			);
-		}
+		$schema_objects = array( 'post_types' => 0 );
 
 		$show_admin = acf_get_setting( 'show_admin' );
 
@@ -1016,22 +781,12 @@ class Site_Health {
 		$fields['schema_ready_objects'] = array(
 			'label' => __( 'Objects with Schema Support', 'acf' ),
 			'value' => sprintf(
-				/* translators: 1: number of post types, 2: number of blocks using ACF schema */
-				__( '%1$d Post Types, %2$d Blocks', 'acf' ),
+				/* translators: %d: number of post types */
+				__( '%d Post Types', 'acf' ),
 				$schema_objects['post_types'],
-				$schema_objects['blocks'],
 			),
 			'debug' => $schema_objects,
 		);
-
-		if ( $is_pro ) {
-			$datastore_enabled           = function_exists( 'acf_is_using_datastore' ) && acf_is_using_datastore();
-			$fields['datastore_enabled'] = array(
-				'label' => __( 'Datastore Enabled', 'acf' ),
-				'value' => $datastore_enabled ? $enabled : $disabled,
-				'debug' => $datastore_enabled,
-			);
-		}
 
 		return $fields;
 	}
