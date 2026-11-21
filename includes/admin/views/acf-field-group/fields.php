@@ -41,7 +41,7 @@ if ( $is_subfield ) {
 <?php if ( $parent || $is_subfield ) { ?>
 <div class="acf-sub-field-list-header">
 	<h3 class="acf-sub-field-list-title"><?php esc_html_e( 'Fields', 'acf' ); ?></h3>
-	<a href="#" class="acf-btn acf-btn-secondary add-field"><i class="acf-icon acf-icon-plus"></i><?php esc_html_e( 'Add Field', 'acf' ); ?></a>
+	<a href="#" class="acf-btn acf-btn-sm add-field"><i class="acf-icon acf-icon-plus"></i><?php esc_html_e( 'Add Field', 'acf' ); ?></a>
 </div>
 <?php } ?>
 <?php //phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- fixed string output ?>
