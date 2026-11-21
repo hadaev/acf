@@ -16,6 +16,7 @@ if ( is_array( $field_groups ) ) {
 	$num_field_groups = count( $field_groups );
 }
 $is_subfield   = ! empty( $is_subfield );
+$parent_layout = ! empty( $parent_layout ) ? $parent_layout : '';
 $wrapper_class = '';
 if ( $is_subfield ) {
 	$wrapper_class = ' acf-is-subfields';
@@ -125,6 +126,7 @@ if ( ! $parent ) :
 			'name'   => 'new_field',
 			'type'   => 'text',
 			'parent' => isset( $field_group['ID'] ) ? $field_group['ID'] : 0,
+			'parent_layout' => $parent_layout,
 		)
 	);
 

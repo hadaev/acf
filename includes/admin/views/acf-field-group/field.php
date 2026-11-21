@@ -68,6 +68,15 @@ if ( isset( $field['conditional_logic'] ) && is_array( $field['conditional_logic
 				)
 			);
 		endforeach;
+		if ( ! empty( $field['parent_layout'] ) ) {
+			acf_hidden_input(
+				array(
+					'name'  => $input_prefix . '[parent_layout]',
+					'value' => $field['parent_layout'],
+					'id'    => $input_id . '-parent_layout',
+				)
+			);
+		}
 		?>
 	</div>
 
