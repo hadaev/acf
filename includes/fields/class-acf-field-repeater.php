@@ -88,6 +88,7 @@ class acf_field_repeater extends acf_field {
 	function field_group_admin_enqueue_scripts() {
 		
 		wp_enqueue_script( 'acf-field-group-repeater', acf_get_url( 'assets/custom-fields/repeater-field-group.js' ), array('acf-field-group') );
+		wp_enqueue_style( 'acf-field-group-flexible-content', acf_get_url( 'assets/custom-fields/flexible-content-field-group.css' ) );
 		
 	}
 	
@@ -394,23 +395,24 @@ class acf_field_repeater extends acf_field {
 		// vars
 		$args = array(
 			'fields'	=> $field['sub_fields'],
-			'parent'	=> $field['ID']
+			'parent'	=> $field['ID'],
+			'is_subfield' => true,
 		);
 		
 		
-		?><tr class="acf-field acf-field-setting-sub_fields" data-setting="repeater" data-name="sub_fields">
-			<td class="acf-label">
+		?><div class="acf-field acf-field-setting-sub_fields" data-setting="repeater" data-name="sub_fields">
+			<div class="acf-label">
 				<label><?php _e("Sub Fields",'acf'); ?></label>
 				<p class="description"></p>		
-			</td>
-			<td class="acf-input">
+			</div>
+			<div class="acf-sub_fields acf-input acf-input-sub acf-fc-field-layout-subfields">
 				<?php 
 				
 				acf_get_view( 'acf-field-group/fields', $args );
 				
 				?>
-			</td>
-		</tr>
+			</div>
+		</div>
 		<?php
 		
 		
