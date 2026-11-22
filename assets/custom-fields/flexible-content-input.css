@@ -1,0 +1,56 @@
+.acf-flexible-content .acf-fc-layout {
+  border: 1px solid #ccd0d4;
+  background: #fff;
+  margin: 0 0 10px;
+}
+.acf-flexible-content .acf-fc-layout.acf-clone {
+  display: none;
+}
+.acf-fc-layout-handle {
+  padding: 10px 12px;
+  background: #2a9bd9;
+  border-bottom: 1px solid #2589c3;
+  position: relative;
+  color: #fff;
+}
+.acf-fc-layout-drag {
+  display: inline-block;
+  margin-right: 8px;
+  color: rgba(255, 255, 255, 0.8);
+  cursor: move;
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: -3px;
+  vertical-align: middle;
+}
+.acf-fc-layout-placeholder {
+  border: 1px dashed #2271b1;
+  background: #f0f6fc;
+  margin-bottom: 10px;
+  visibility: visible !important;
+}
+.acf-fc-layout-label {
+  font-weight: 600;
+}
+.acf-fc-layout-handle .acf-icon {
+  float: right;
+  margin-left: 4px;
+}
+.acf-fc-layout-body {
+  padding: 12px;
+}
+.acf-fc-layout-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+.acf-fc-layout-table th,
+.acf-fc-layout-table td {
+  padding: 8px;
+  border: 1px solid #ccd0d4;
+  vertical-align: top;
+}
+.acf-fc-layout-select {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}

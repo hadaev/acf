@@ -1,0 +1,190 @@
+.acf-field-type-settings>label,
+.acf-field-type-settings>.acf-fc-field-layouts,
+.acf-field-type-settings>p {
+  padding-left: 72px;
+  margin-bottom: 8px;
+  display: block;
+}
+.acf-fc-field-layout-list {
+  margin-bottom: 10px;
+}
+.acf-fc-field-layout {
+  border: 1px solid #dedede;
+  margin-bottom: 16px;
+  background: #fff;
+  border-radius: 0;
+}
+.acf-fc-field-layout-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 34px;
+  padding: 6px 16px;
+  background: #f7f7f7;
+  border-bottom: 1px solid #dedede;
+  color: #333;
+}
+.acf-fc-field-layout-header:before {
+  content: none;
+}
+.acf-fc-field-layout-title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex: 1;
+  min-width: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: #333;
+  text-align: left;
+  font-size: 13px;
+  line-height: 20px;
+  font-weight: 600;
+  cursor: pointer;
+}
+.acf-fc-field-layout-title:after {
+  content: "\25be";
+  margin-left: 8px;
+  transition: transform 0.15s ease;
+}
+.acf-fc-field-layout.-collapsed .acf-fc-field-layout-title:after {
+  transform: rotate(-90deg);
+}
+.acf-fc-field-layout-title:focus-visible {
+  outline: 2px solid #2271b1;
+  outline-offset: 2px;
+}
+.acf-fc-field-layout.-collapsed .acf-fc-field-layout-settings,
+.acf-fc-field-layout.-collapsed .acf-fc-field-layout-subfields {
+  display: none;
+}
+.acf-fc-field-layout-header .acf-fc-remove-layout {
+  display: inline-flex;
+  flex: 0 0 24px;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  margin-left: 8px;
+  color: #555;
+  border: 0;
+  background: transparent;
+  box-shadow: none;
+}
+.acf-fc-field-layout-header .acf-fc-remove-layout:before {
+  content: "\2212";
+  font: 20px/1 Arial, sans-serif;
+}
+.acf-fc-field-layout-settings {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 12px;
+  padding: 16px 16px 0;
+}
+.acf-fc-field-setting {
+  display: flex;
+  min-width: 0;
+}
+.acf-fc-field-setting label {
+  display: flex;
+  align-items: center;
+  flex: 0 0 60px;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0 8px;
+  border: 1px solid #ddd;
+  border-right: 0;
+  background: #f4f4f4;
+  color: #555;
+  font-weight: 400;
+}
+.acf-fc-field-setting input,
+.acf-fc-field-setting select {
+  flex: 1;
+  min-width: 0;
+  width: 100%;
+  margin: 0;
+  border-radius: 0;
+}
+.acf-fc-field-layout-subfields {
+  padding: 16px;
+}
+.acf-fc-field-layout-subfields .acf-sub-field-list-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 38px;
+  margin: 0;
+  border: 1px solid #ccd0d4;
+  border-bottom: 0;
+  background: #fff;
+  padding: 6px 8px 6px 12px;
+}
+.acf-fc-field-layout-subfields .acf-sub-field-list-header h3 {
+  display: none;
+}
+.acf-fc-field-layout-subfields .acf-sub-field-list-header .add-field {
+  margin-left: auto;
+  color: #fff;
+  background: #2271b1;
+  border-color: #2271b1;
+  box-shadow: none;
+}
+.acf-fc-field-layout-subfields .acf-field-list-wrap {
+  border: 1px solid #ccd0d4;
+}
+.acf-fc-field-layout-subfields .acf-field-list {
+  background: #fff;
+  margin: 0;
+}
+.acf-fc-field-layout-subfields .acf-thead,
+.acf-fc-field-layout-subfields .acf-tfoot {
+  background: #fff;
+}
+.acf-fc-field-layout-subfields .acf-thead {
+  min-height: 38px;
+  border-bottom: 1px solid #ccd0d4;
+}
+.acf-fc-field-layout-subfields .acf-tfoot {
+  min-height: 46px;
+  border-top: 1px solid #ccd0d4;
+  align-items: center;
+  padding: 7px 8px;
+  background: #eaf2fa;
+}
+.acf-fc-field-layout-subfields .acf-tfoot .add-field {
+  color: #fff;
+  background: #2271b1;
+  border-color: #2271b1;
+  box-shadow: none;
+}
+.acf-fc-field-layout-subfields .acf-field-object.open > .handle a {
+  color: #102a3a;
+  text-shadow: none;
+}
+.acf-fc-add-layout {
+  color: #fff;
+  background: #2271b1;
+  border-color: #2271b1;
+  box-shadow: none;
+}
+.acf-fc-add-layout:hover,
+.acf-fc-add-layout:focus {
+  color: #fff;
+  background: #135e96;
+  border-color: #135e96;
+}
+
+@media screen and (max-width: 782px) {
+  .acf-fc-field-layout-header {
+    padding-left: 8px;
+    padding-right: 8px;
+  }
+  .acf-fc-field-layout-settings {
+    padding: 8px 8px 0;
+  }
+  .acf-fc-field-layout-subfields {
+    padding: 8px;
+  }
+}
